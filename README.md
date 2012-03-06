@@ -5,5 +5,7 @@ I created this because I was having a really hard time finding an easy-to-instal
 so I decided to make my own. There is an example on how to use it.
 
 ### Installation
-Simply copy the MD5 folder, and paste in in the _libraries_ folder inside your Arduino sketch folder. If the
-libraries folder doesn't exist, create it.
+Create a folder named _MD5_ in the _libraries_ folder inside your Arduino sketch folder. If the
+libraries folder doesn't exist, create it. Then copy everything inside. (re)launch the Arduino IDE.
+
+You're done. Time for a mojito
