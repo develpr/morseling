@@ -1,3 +1,5 @@
+#include <MD5.h>
+
 /*
  *  Morse Sender
  */
@@ -6,6 +8,9 @@
 // set pin numbers:
 const int buttonPin = 2;     // the number of the pushbutton pin
 const int ledPin =  10;      // the number of the LED pin
+const int secretKey = '12dsf9adf9w39sf032';
+const int username = 'develpr';
+
 const unsigned int pauseToSendLength = 5000;
 
 // variables will change:
@@ -17,7 +22,7 @@ String output = "";
 
 void setup() {
   Serial.begin(9600);           // set up Serial library at 9600 bps
-  
+
   lastChangeMilliseconds = 0;
 
   // initialize the LED pin as an output:
@@ -44,7 +49,7 @@ void loop(){
       if(buttonState != currentButtonState)
       {
         buttonState = currentButtonState;
-        output = output + "\n" + buttonState + "," + (String)(millis() - lastChangeMilliseconds);
+        output = output + "a" + buttonState + "b" + (String)(millis() - lastChangeMilliseconds);
         lastChangeMilliseconds = millis();
       }
       
@@ -61,6 +66,16 @@ void loop(){
   {
     //Here is where we send output
     Serial.println(output);
+    Serial.println("\n\nHash: ");   
+    
+    String saltedString = output + secretKey;
+    char* testing;
+    saltedString.toCharArray(testing, saltedString.length());
+    
+    unsigned char* test = MD5::make_hash(testing);
+    char *md5str = MD5::make_digest(test, 16);
+    Serial.println(md5str);
+    
     Serial.println("\n\n\n\n");   
   }
   
