@@ -1,27 +1,5 @@
 /*
-  Button
- 
- Turns on and off a light emitting diode(LED) connected to digital  
- pin 13, when pressing a pushbutton attached to pin 2. 
- 
- 
- The circuit:
- * LED attached from pin 13 to ground 
- * pushbutton attached to pin 2 from +5V
- * 10K resistor attached to pin 2 from ground
- 
- * Note: on most Arduinos there is already an LED on the board
- attached to pin 13.
- 
- 
- created 2005
- by DojoDave <http://www.0j0.org>
- modified 30 Aug 2011
- by Tom Igoe
- 
- This example code is in the public domain.
- 
- http://www.arduino.cc/en/Tutorial/Button
+ *  Morse Sender
  */
 
 // constants won't change. They're used here to 
@@ -52,8 +30,7 @@ void loop(){
   // read the state of the pushbutton value:
   buttonState = digitalRead(buttonPin);
 
-  output = "";
-  
+  output = "";  
   
   if(buttonState == HIGH)
   {
@@ -67,32 +44,26 @@ void loop(){
       if(buttonState != currentButtonState)
       {
         buttonState = currentButtonState;
-        output = output + "\n..." + buttonState + " for " + (String)(millis() - lastChangeMilliseconds);
+        output = output + "\n" + buttonState + "," + (String)(millis() - lastChangeMilliseconds);
         lastChangeMilliseconds = millis();
       }
       
       if((buttonState == LOW) && ((millis() - lastChangeMilliseconds) >= pauseToSendLength))
-      {
-        Serial.println("*****" + (String)lastChangeMilliseconds + "*******"); 
+      {        
         break;
       }
     }    
   }
-//  
-//  while(buttonState != LOW && (millis()-lastChangeMilliseconds) <= pauseToSendLength)
-//  {
-//    
-//
-//  }
   
   digitalWrite(ledPin, LOW);
   
   if(output != "")
   {
+    //Here is where we send output
     Serial.println(output);
     Serial.println("\n\n\n\n");   
   }
-
   
+  //Here we should check to see if any new messages are here, every few seconds
 
 }
