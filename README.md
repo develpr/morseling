@@ -31,7 +31,12 @@ Usage is simple:
 	$morsel->setSecret('bluemyself');
 	
 	//Now we're all set! Let's get the latest transmission
-	$morsel->getTransmission(false);
+	$transmission = $morsel->getTransmission(false);
+	
+	if($transmission)
+		echo "The latest transmission said " . $transmission->message->text;
+	else
+		echo "no new transmissions!";
 	
 
 
