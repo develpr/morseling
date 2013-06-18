@@ -1,7 +1,7 @@
 {
-	"name": "develpr/morseling",
+    "name": "develpr/morseling",
     "description": "Morseling (morse code API) helper.",
-    "keywords": ["morse","morse code", "morseling", "morsel", "encoder", "encoding"],
+    "keywords": ["morse","morse code", "morseling", "morsel"],
     "license": "BSD",
     "authors": [
         {
