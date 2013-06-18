@@ -35,5 +35,9 @@ Usage is simple:
 	
 
 
+Passing in an optional boolean `true` will automatically mark the transmission as received.
+
+	//Now we're all set! Let's get the latest transmission and mark it as received
+	$morsel->getTransmission(true);
 
 
