@@ -1,6 +1,6 @@
 <?php
 
-namespace Develpr;
+namespace Develpr\Morseling;
 
 class Morseling{
 	
