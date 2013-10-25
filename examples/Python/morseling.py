@@ -1,10 +1,10 @@
 import hmac,hashlib,urllib2,json,urllib
 
 class morseling:
-	base_url = "http://morsel.com"
+	base_url = "http://morsel.develpr.com"
 	base_api = "/api/v1/"
 	url = ""
-	key = "sf9k03asgasfk02"
+	key = ""
 	data = ""
 	id = 1
 	message_times = ""
@@ -23,8 +23,7 @@ class morseling:
 		signature = self.get_hmac_hash()
 		
 		request = urllib2.Request(self.url)
-		request.add_header('Auth', '1:' + signature)
-		request.add_header('Cookie', 'XDEBUG_SESSION=PHPSTORM')
+		request.add_header('Auth', str(self.id) + ':' + signature)
 		
 		try:
 			response = urllib2.urlopen(request)
@@ -51,8 +50,7 @@ class morseling:
 		
 		request = urllib2.Request(self.url, self.data)
 		request.get_method = lambda: 'PUT'
-		request.add_header('Auth', '1:' + signature)
-		request.add_header('Cookie', 'XDEBUG_SESSION=PHPSTORM')
+		request.add_header('Auth', str(self.id) + ':' + signature)
 		
 		try:
 			response = urllib2.urlopen(request)
@@ -65,9 +63,5 @@ class morseling:
 		
 		
 	def get_hmac_hash(self):
-		print self.url
-		#MATCH if self.url = http://morsel.com/api/v1/transmissions?received=0 
-		#MATCH if self.url = http://morsel.com/api/v1/transmissions?received=0a9asf12313129as9323asd
-		#NO MATCH self.url = http://morsel.com/api/v1/transmissions?received=0&direction=received
 		signature = hmac.new(self.key, self.url + self.data, hashlib.md5).hexdigest()
 		return signature
