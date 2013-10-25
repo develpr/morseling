@@ -1,48 +1,8 @@
-Morseling API Helper
-====================
+Morseling - Arduino
+===========
 
-Purpose
--------
+##A simple Arduino sketch for recording key presses and transmissing them
 
-This package is made to allow simple communication with the Morsel API.
+This is a simple sketch that can be used as the bases for more complex sketches, likely for the purposes of simulating a morse code "key." The sketch is simple, basically listening for a button press, then continueing to listen for additional button presses and recording the length of button presses as well as the length of time between button presses. After a 5 second delay, these button presses are "transmitted" to the serial output.
 
-With it, you can:
-
-1. create a new message
-2. get a transmission
-3. update a transmission to be read
-
-Additionally, you should be able to easily fork/modify the code to add additional features, as allowed by the [Morsel API](http://morsel.develpr.com/docs).
-
-Use
----
-
-Usage is simple:
-	
-	//Create an instance of the Morseling API helper
-	$morseling = new Develpr\Morseling\Morseling;
-
-(You can find your Morsel id and shared secret at [your Morsel account](http://morsel.develpr.com/account))
-	
-	//Set your Morsel ID
-	$morseling->setId(1);
-
-	//Set you shared secret
-	$morsel->setSecret('bluemyself');
-	
-	//Now we're all set! Let's get the latest transmission
-	$transmission = $morsel->getTransmission(false);
-	
-	if($transmission)
-		echo "The latest transmission said " . $transmission->message->text;
-	else
-		echo "no new transmissions!";
-	
-
-
-Passing in an optional boolean `true` will automatically mark the transmission as received.
-
-	//Now we're all set! Let's get the latest transmission and mark it as received
-	$morsel->getTransmission(true);
-
-
+This will be changed/modified in time to work with the Arduino Yun, and both send and receive transmissions using the Bridge library.
