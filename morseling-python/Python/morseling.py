@@ -1,12 +1,17 @@
 import hmac,hashlib,urllib2,json,urllib
 
 class morseling:
+    #Your secret key - get this from http://morsel.develpr.com
+    key = ""
+    #Your user ID, get this from http://morsel.develpr.com also
+    id = 0
+    #The base URL for Morsel - may change over time
 	base_url = "http://morsel.develpr.com"
+    #The endpoint for the version of the API we're using
 	base_api = "/api/v1/"
 	url = ""
-	key = ""
 	data = ""
-	id = 1
+	
 	message_times = ""
 	
 	
@@ -17,9 +22,11 @@ class morseling:
 		return self.url
 		
 	def get_transmission(self, simple=True):
+        #We're getting transmissions that have been sent to us, and have not yet been marked as received
 		self.url = self.base_url + self.base_api + "transmissions?direction=received&received=0"
 		self.data = ""
 		
+        #generate a hmac signature for the request
 		signature = self.get_hmac_hash()
 		
 		request = urllib2.Request(self.url)
@@ -55,12 +62,8 @@ class morseling:
 		try:
 			response = urllib2.urlopen(request)
 			print "ok"
-			# data = json.load(response)
 		except Exception, e:
 			print "error"
-			# data = json.load(e) 
-		
-		
 		
 	def get_hmac_hash(self):
 		signature = hmac.new(self.key, self.url + self.data, hashlib.md5).hexdigest()
