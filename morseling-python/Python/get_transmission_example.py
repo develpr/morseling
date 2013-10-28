@@ -5,5 +5,5 @@ transmission = req.get_transmission(True)
 
 if(transmission != False):
     print transmission
-	req.receive_transmission(transmission[0]["id"])
+    req.receive_transmission(transmission[0]["id"])
 
