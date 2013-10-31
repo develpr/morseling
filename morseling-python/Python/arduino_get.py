@@ -1,4 +1,9 @@
-import json,morseling
+#!/usr/bin/python
+import json,morseling,sys
+
+from bridge.bridgeclient import BridgeClient
+
+bridge_setter = BridgeClient()
 
 req = morseling.morseling()
 
@@ -16,3 +21,5 @@ if(transmission != False):
     # todo: use Bridge to send this
     
     req.receive_transmission(transmission[0]["id"])
+    
+    bridge_setter.put("play1", raw_message)
