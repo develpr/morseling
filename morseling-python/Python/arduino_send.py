@@ -20,16 +20,16 @@ message3 = bridge_client.get("message3")
 
 if(message1):
         #send message via morsel api
-        req.send_message_with_timings(message1)
-      	bridge_client.put('message1', '')
+	req.send_message_with_timings(message1)
+	bridge_client.put('message1', '')
                         
 if(message2):
 	#send message via morsel api
 	req.send_message_with_timings(message2)
-       	bridge_client.put('message2', '')
+	bridge_client.put('message2', '')
                                                 
                                                 
 if(message3):
 	#send this message too
 	req.send_message_with_timings(message3)
-        bridge_client.put('message3', '')
+	bridge_client.put('message3', '')
