@@ -21,7 +21,7 @@ class morseling:
     def get_url(self):
         return self.url
 
-    def get_transmission(self, simple=True):
+    def get_transmission(self):
         #We're getting transmissions that have been sent to us, and have not yet been marked as received
         self.url = self.base_url + self.base_api + "transmissions?direction=received&received=0"
         self.data = ""
@@ -61,10 +61,10 @@ class morseling:
 
         try:
             response = urllib2.urlopen(request)
-            print "ok"
+            return True
             
         except Exception, e:
-            print "error"
+            return False
        
     """
     Send a message with a series of times (key presses and pauses)
@@ -89,10 +89,10 @@ class morseling:
         try:
             response = urllib2.urlopen(request)
             data = json.load(response)
-            print "sent"
+            return True
             
         except Exception, e:
-            print "not sent"
+            return False
                         
         if len(data) > 0:
             return data
@@ -123,10 +123,10 @@ class morseling:
         try:
             response = urllib2.urlopen(request)
             data = json.load(response)
-            print "sent"
+            return True
             
         except Exception, e:
-            print "not sent"
+            return False
                         
         if len(data) > 0:
             return data
