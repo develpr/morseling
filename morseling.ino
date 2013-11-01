@@ -24,6 +24,10 @@ int currentButtonState = LOW;
 String output = "";
 String tsts = "";
 char value[1000];
+String buffer = "";
+char action = ' ';
+char previous = ' ';
+char current = ' ';
 
 void setup() {
   lastChangeMilliseconds = 0;
@@ -95,29 +99,63 @@ void loop(){
     }
   }
     
-  /* Every 200ms: */
-
-  if (millis() - timer > 500) {
+  /* Every 500ms: */
+  //todo: TEST THIS!!!!!
+  //Here we should check to see if any new messages are here, every few seconds
+  //http://jsfiddle.net/8JTLU/4/
+  if (millis() - timer > 5/00) {
     timer = millis();
     Bridge.get("play1", value, 1000);
-    String tsts = String(value);
+    String toPlay = String(value);
     
-    if(tsts.length() > 0)
+    if(toPlay.length() > 0)
     {
-      //todo: play back the message!
-      digitalWrite(ledPin, HIGH);
-      delay(2000);
-      digitalWrite(ledPin, LOW);
-      delay(2000);
-      digitalWrite(ledPin, HIGH);
-      delay(2000);
-      digitalWrite(ledPin, LOW);
-      delay(2000);
+      buffer = "";
+      action = ' ';
+      current = ' ';
+      previous = ' ';
+      for(int i = 1; i < toPlay.length(); i++)
+      {
+        current = toPlay.charAt(i);
+        previous = toPlay.charAt(i-1);
+        if(current == 'a')
+        {
+          char bufferTime[buffer.length()];
+          buffer.toCharArray(bufferTime, buffer.length());   
+          int toPlay = atoi(bufferTime);       
+          if(action == '0'){
+
+            playSound(toPlay);
+          }            
+          else
+            delay(toPlay);
+          buffer = "";
+          action = ' ';
+        }
+        
+        if(previous == 'a')
+          action = current;
+          
+        else if(current == 'b')
+          buffer = "";
+         
+         else
+           buffer += String(current);
+          
+      }
       Bridge.put("play1", "");
     }    
     
   }
   
-  //Here we should check to see if any new messages are here, every few seconds
 
+
+}
+
+/*
+ *  Play back a sound for a given length of time
+ *  todo: finish this
+ */
+void playSound(int playTime){
+  //play sound!!
 }
