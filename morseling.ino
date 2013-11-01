@@ -11,7 +11,7 @@
 // constants won't change. They're used here to 
 // set pin numbers:
 const int buttonPin = 2;     // the number of the pushbutton pin
-const int ledPin =  13;      // the number of the LED pin
+const int ledPin =  10;      // the number of the LED pin
 long timer = 0; //a timer
 
 const unsigned int pauseToSendLength = 5000;
@@ -41,32 +41,34 @@ void loop(){
 
   output = "";  
   //todo: for some reason without a button actually hooked up the Yun seems to enter this loop and never leave
-//  
-//  if(buttonState == HIGH)
-//  {
-//    lastChangeMilliseconds = millis();
-//    while(true)
-//    {
-//      //digitalWrite(ledPin, HIGH);
-//    
-//      currentButtonState = digitalRead(buttonPin);
-//      
-//      if(buttonState != currentButtonState)
-//      {
-//        buttonState = currentButtonState;
-//        output = output + "a" + buttonState + "b" + (String)(millis() - lastChangeMilliseconds);
-//        lastChangeMilliseconds = millis();
-//      }
-//      
-//      if((buttonState == LOW) && ((millis() - lastChangeMilliseconds) >= pauseToSendLength))
-//      {        
-//        break;
-//      }
-//    }    
-//  }
-//  
-  digitalWrite(ledPin, LOW);
+  
+  if(buttonState == HIGH)
+  {
+    lastChangeMilliseconds = millis();
+    while(true)
+    {
+      digitalWrite(ledPin, HIGH);
     
+      currentButtonState = digitalRead(buttonPin);
+      
+      if(buttonState != currentButtonState)
+      {
+        buttonState = currentButtonState;
+        output = output + "a" + buttonState + "b" + (String)(millis() - lastChangeMilliseconds);
+        lastChangeMilliseconds = millis();
+      }
+      
+      if((buttonState == LOW) && ((millis() - lastChangeMilliseconds) >= pauseToSendLength))
+      {        
+        break;
+      }
+    }    
+  }
+  
+  digitalWrite(ledPin, LOW);
+//    
+//  output = "a0b100a1b100a0b100a1b100a0b100a1b300a0b300a1b100a0b300a1b100a0b300a1b300a0b100a1b100a0b100a1b100a0b100";
+//  
   if(output != "")
   {
 
@@ -92,8 +94,7 @@ void loop(){
 
     }
   }
-  
-  
+    
   /* Every 200ms: */
 
   if (millis() - timer > 500) {
