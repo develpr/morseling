@@ -1,5 +1,7 @@
 #include <Bridge.h>
 #include <CapacitiveSensor.h>
+#include <Console.h>
+#include <MemoryFree.h>
 
 /*
  *  Morseling script
@@ -13,32 +15,38 @@
 // set pin numbers:
 const int buttonPin = 2;     // the number of the pushbutton pin
 const int ledPin =  10;      // the number of the LED pin
-long timer = 0; //a timer
+const unsigned int pauseToSendLength = 5000;
+
+
 CapacitiveSensor   cs_4_2 = CapacitiveSensor(4,3);
 CapacitiveSensor   cs_4_5 = CapacitiveSensor(4,5);
 
-const unsigned int pauseToSendLength = 5000;
+
 
 // variables will change:
+
 int playbackMultiplier = 1;
 int buttonState = 0;         // variable for reading the pushbutton status
 unsigned long lastChangeMilliseconds = 0;
 unsigned long now = 0;
 int currentButtonState = LOW;
 String output = "";
-String tsts = "";
+String toPlay = "";
+
 char value[1000];
-String buffer = "";
 char action = ' ';
-char previous = ' ';
-char current = ' ';
+int playTime = 0;
+long timer = 0; //a timer
 long replayButton = 0;
 long multiplyButton = 0;
 
 void setup() {
   lastChangeMilliseconds = 0;
   Bridge.begin();
-
+  Console.begin(); 
+  while(!Console);
+  
+  Console.println("HELLO!!");
   // initialize the LED pin as an output:
   pinMode(ledPin, OUTPUT);      
   // initialize the pushbutton pin as an input:
@@ -66,16 +74,17 @@ void loop(){
   if(replayButton > 100)
   {
     Bridge.get("replay", value, 1000);
-    String toPlay = String(value);
-    play(toPlay, playbackMultiplier);  
+    toPlay = String(value);
+    play(playbackMultiplier);  
   }
   
-
-  output = "";  
   //todo: for some reason without a button actually hooked up the Yun seems to enter this loop and never leave
   
   if(buttonState == HIGH)
   {
+    output = ""; 
+    
+    int count = 1;
     lastChangeMilliseconds = millis();
     while(true)
     {
@@ -114,16 +123,7 @@ void loop(){
       Bridge.put("message1", output);
     else
     {
-
-      Bridge.get("message2", value, 1000);
-      tsts = String(value);
-      if(tsts.length() == 0)
-        Bridge.put("message2", output);
-      else
-      {
-	Bridge.put("message3", output);
-      }
-
+      Bridge.put("message2", output);
     }
   }
     
@@ -134,11 +134,15 @@ void loop(){
   if (millis() - timer > 500) {
     timer = millis();
     Bridge.get("play1", value, 1000);
-    String toPlay = String(value);
+    toPlay = String(value);
+
     
     if(toPlay.length() > 0)
     {
-      play(toPlay, playbackMultiplier);      
+      Console.print("freeMemory()=");
+      Console.println(freeMemory());
+      Console.println(toPlay);
+      play(playbackMultiplier);      
       Bridge.put("play1", "");
     }    
     
@@ -157,46 +161,30 @@ void beepXTimes(int times)
   } 
 }
 
-void play(String toPlay, int multiplier)
+void play(int multiplier)
 {
-  multiplier = 500 * 1.2^multiplier;
-  buffer = "";
+  Console.print("freeMemory()=");
+  Console.println(freeMemory());
+  //a0b3a1b1a0b1a1b1a0b3a1b3a1b7a0b3a1b1a0b1a1b1a0b3a1b3
+  multiplier = 400 * pow(1.2,multiplier);
   action = ' ';
-  current = ' ';
-  previous = ' ';
-  for(int i = 1; i < toPlay.length(); i++)
+  for(int i = 0; i < toPlay.length(); i+=4)
   {
-    current = toPlay.charAt(i);
-    previous = toPlay.charAt(i-1);
-    if(current == 'a')
+    action = toPlay.charAt(i+1);
+    playTime = toPlay.charAt(i+3) - '0';
+    Console.print("playing... ");
+  
+    if(action == '0')
     {
-      char bufferTime[buffer.length()];
-      buffer.toCharArray(bufferTime, buffer.length());   
-      int toPlay = atoi(bufferTime);    
-      //required to expand - values come in as single ints
-      toPlay = (toPlay * multiplier);
-      if(action == '0'){
-        playSound(toPlay);
-      }            
-      else
-      {
-        digitalWrite(ledPin, LOW);
-        delay(toPlay);
-      }
-      buffer = "";
-      action = ' ';
-    }
-    
-    if(previous == 'a')
-      action = current;
-      
-    else if(current == 'b')
-      buffer = "";
-     
-     else
-       buffer += String(current);
-      
+      playSound(playTime);
+    }            
+    else
+    {
+      digitalWrite(ledPin, LOW);
+      delay(playTime);
+    }      
   }
+  Console.println("\nFinished playing\n");
 }
 
 /*
