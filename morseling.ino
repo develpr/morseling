@@ -20,7 +20,7 @@ CapacitiveSensor   cs_4_5 = CapacitiveSensor(4,5);
 const unsigned int pauseToSendLength = 5000;
 
 // variables will change:
-int playbackMultiplier = 5;
+int playbackMultiplier = 1;
 int buttonState = 0;         // variable for reading the pushbutton status
 unsigned long lastChangeMilliseconds = 0;
 unsigned long now = 0;
@@ -55,20 +55,11 @@ void loop(){
   //Should we change the message playback multiplier?
   if(multiplyButton > 100)
   {
-    playbackMultiplier = playbackMultiplier * 1.2;
-    if(playbackMultiplier > 26)
-      playbackMultiplier = 5;
-      
-    if(playbackMultiplier == 5)
-      beepXTimes(1);
-    else if(playbackMultiplier >= 7 && playbackMultiplier <= 8)
-      beepXTimes(2);
-    else if(playbackMultiplier >= 11 && playbackMultiplier <= 12)
-      beepXTimes(3);
-    else if(playbackMultiplier >= 16 && playbackMultiplier <= 17)
-      beepXTimes(4);
-    else if(playbackMultiplier >= 25 && playbackMultiplier <= 26)
-      beepXTimes(5);      
+    playbackMultiplier++;
+    if(playbackMultiplier > 5)
+      playbackMultiplier = 1;
+    
+    beepXTimes(playbackMultiplier);     
   }
 
   //Check if replay button has been pressed
@@ -168,6 +159,7 @@ void beepXTimes(int times)
 
 void play(String toPlay, int multiplier)
 {
+  multiplier = 500 * 1.2^multiplier;
   buffer = "";
   action = ' ';
   current = ' ';
@@ -180,15 +172,16 @@ void play(String toPlay, int multiplier)
     {
       char bufferTime[buffer.length()];
       buffer.toCharArray(bufferTime, buffer.length());   
-      int toPlay = atoi(bufferTime);       
+      int toPlay = atoi(bufferTime);    
+      //required to expand - values come in as single ints
+      toPlay = (toPlay * multiplier);
       if(action == '0'){
-
-        playSound(toPlay * multiplier);
+        playSound(toPlay);
       }            
       else
       {
         digitalWrite(ledPin, LOW);
-        delay(toPlay * multiplier);
+        delay(toPlay);
       }
       buffer = "";
       action = ' ';
