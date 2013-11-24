@@ -28,7 +28,7 @@ def send_messages():
         
     if(len(message) > 0)
 	    req.send_message_with_timings(message)
-	    bridge_client.put('message1', '')
+	    bridge_client.put('message1' + `readIndex`, '')
                         
 	        
 send_messages()
