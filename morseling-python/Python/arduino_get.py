@@ -29,6 +29,7 @@ def get_messages():
             bridge_setter.put("play1" + `playIndex`, raw_message[0:BRIDGE_CHARACTER_LIMIT])
             bridge_setter.put("replay" + `playIndex`, raw_message[0:BRIDGE_CHARACTER_LIMIT])
             raw_message = raw_message[BRIDGE_CHARACTER_LIMIT:]
+            playIndex += 1
     	    
 
 time.sleep(10)
