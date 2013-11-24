@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import json,morseling,sys
+import json,morseling,sys,time
 
 from bridge.bridgeclient import BridgeClient
 
@@ -16,13 +16,15 @@ req = morseling.morseling()
 def send_messages():
     
     readIndex = 0;
-    buffer = bridge_client.get("message1" + `readIndex`)
+    message = ""
+    message_buffer = bridge_client.get("message1" + `readIndex`)
     
-    while(len(message) > 0)        
+    while(len(message_buffer) > 0)
+        message = message + message_buffer 
         #send message via morsel api
         bridge_client.put("message1" + `readIndex`, '')
         readIndex++
-        
+        message_buffer = bridge_client.get("message1" + `readIndex`)
         
     if(len(message) > 0)
 	    req.send_message_with_timings(message)
