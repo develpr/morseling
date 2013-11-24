@@ -14,32 +14,21 @@ req = morseling.morseling()
 #           a is the seperator between press/pause and length key pairs
 
 def send_messages():
-	message1 = bridge_client.get("message1")
-	message2 = bridge_client.get("message2")
-	message3 = bridge_client.get("message3")
-
-	if(message1):
-	        #send message via morsel api
-	        req.send_message_with_timings(message1)
-	      	bridge_client.put('message1', '')
+    
+    readIndex = 0;
+    buffer = bridge_client.get("message1" + `readIndex`)
+    
+    while(len(message) > 0)        
+        #send message via morsel api
+        bridge_client.put("message1" + `readIndex`, '')
+        readIndex++
+        
+        
+    if(len(message) > 0)
+	    req.send_message_with_timings(message)
+	    bridge_client.put('message1', '')
                         
-	if(message2):
-		#send message via morsel api
-		req.send_message_with_timings(message2)
-	       	bridge_client.put('message2', '')
-                                                
-                                                
-	if(message3):
-		#send this message too
-		req.send_message_with_timings(message3)
-	        bridge_client.put('message3', '')
 	        
 send_messages()
-time.sleep(10)
-send_messages()
-time.sleep(10)
-send_messages()
-time.sleep(10)
-send_messages()
-time.sleep(10)
+time.sleep(20)
 send_messages()
