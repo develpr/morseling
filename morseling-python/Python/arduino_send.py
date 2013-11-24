@@ -33,3 +33,13 @@ if(message3):
 	#send this message too
 	req.send_message_with_timings(message3)
 	bridge_client.put('message3', '')
+
+send_messages()
+time.sleep(10)
+send_messages()
+time.sleep(10)
+send_messages()
+time.sleep(10)
+send_messages()
+time.sleep(10)
+send_messages()
