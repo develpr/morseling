@@ -19,18 +19,20 @@ def send_messages():
     message = ""
     message_buffer = bridge_client.get("message1" + `readIndex`)
     
-    while(len(message_buffer) > 0)
+    while(message_buffer and len(message_buffer) > 0):
+    	print "message buffer message1" + `readIndex` + " contains: "
+    	print message_buffer
         message = message + message_buffer 
         #send message via morsel api
         bridge_client.put("message1" + `readIndex`, '')
-        readIndex++
+        readIndex += 1
         message_buffer = bridge_client.get("message1" + `readIndex`)
         
-    if(len(message) > 0)
+    if(len(message) > 0):
 	    req.send_message_with_timings(message)
 	    bridge_client.put('message1' + `readIndex`, '')
                         
 	        
 send_messages()
-time.sleep(20)
-send_messages()
+#time.sleep(20)
+#send_messages()
