@@ -1,7 +1,7 @@
 #include <Bridge.h>
 #include <CapacitiveSensor.h>
-#include <Console.h>
-#include <MemoryFree.h>
+//#include <Console.h>
+//#include <MemoryFree.h>
 
 /*
  *  Morseling script
@@ -18,7 +18,7 @@ const int ledPin =  10;      // the number of the LED pin
 const unsigned int pauseToSendLength = 5000;
 
 
-CapacitiveSensor   cs_4_2 = CapacitiveSensor(4,3);
+CapacitiveSensor   cs_4_3 = CapacitiveSensor(4,3);
 CapacitiveSensor   cs_4_5 = CapacitiveSensor(4,5);
 
 // variables will change:
@@ -41,10 +41,10 @@ long multiplyButton = 0;
 void setup() {
   lastChangeMilliseconds = 0;
   Bridge.begin();
-  Console.begin(); 
-  while(!Console);
+//  Console.begin(); 
+//  while(!Console);
   
-  Console.println("HELLO!!");
+//  Console.println("HELLO!!");
   // initialize the LED pin as an output:
   pinMode(ledPin, OUTPUT);      
   // initialize the pushbutton pin as an input:
@@ -56,8 +56,9 @@ void loop(){
 
   // read the state of the pushbutton value:
   buttonState = digitalRead(buttonPin);
-  replayButton =  cs_4_2.capacitiveSensor(30);
+  replayButton =  cs_4_3.capacitiveSensor(30);
   multiplyButton =  cs_4_5.capacitiveSensor(30);
+    
   
   //Should we change the message playback multiplier?
   if(multiplyButton > 100)
@@ -72,7 +73,27 @@ void loop(){
   //Check if replay button has been pressed
   if(replayButton > 100)
   {
-    Bridge.get("replay", value, 1000);
+    int readIndex = 0;
+    char readLocation[] = "replay0";  
+    toPlay = "";
+        
+    Bridge.get(readLocation, value, 255);
+    
+    while(strlen(value) > 0)
+    {
+//      Console.print("freeMemory()=");
+//      Console.println(freeMemory());
+//      Console.print("something to playback in ");
+//      Console.println(readLocation);
+      toPlay = String(value);
+      play(playbackMultiplier);  
+//      Console.print("freeMemory()=");
+//      Console.println(freeMemory());
+      readIndex++;
+      if(readIndex < 10)
+        readLocation[6]='0'+readIndex;
+      Bridge.get(readLocation, value, 255);
+    } 
     toPlay = String(value);
     play(playbackMultiplier);  
   }
@@ -81,7 +102,7 @@ void loop(){
   
   if(buttonState == HIGH)
   {
-    Console.println("high button state");
+//    Console.println("high button state");
     
     //reset the output
     output = ""; 
@@ -90,8 +111,8 @@ void loop(){
     lastChangeMilliseconds = millis();
     while(true)
     {
-      Console.print("freeMemory()=");
-      Console.println(freeMemory());
+//      Console.print("freeMemory()=");
+//      Console.println(freeMemory());
       digitalWrite(ledPin, HIGH);
     
       currentButtonState = digitalRead(buttonPin);
@@ -117,7 +138,7 @@ void loop(){
   if(output != "")
   {
 
-    Console.println("output != 0");
+//    Console.println("output != 0");
     //Get the first message buffer
     
     //todo: this would be the spot we'd want to check for an existing message
@@ -133,12 +154,12 @@ void loop(){
 
       if(writeIndex < 10)
         writeLocation[8]='0'+writeIndex;
-      Console.print("here: ");   
-      Console.println(writeLocation);         
+//      Console.print("here: ");   
+//      Console.println(writeLocation);         
    
       int subLength = output.length() > 250 ? 250 : output.length();
-      Console.println("goes: ");
-      Console.println(output.substring(0, subLength));   
+//      Console.println("goes: ");
+//      Console.println(output.substring(0, subLength));   
       Bridge.put(writeLocation, output.substring(0, subLength));
       output = output.substring(subLength+1, output.length());  
       writeIndex++;    
@@ -152,7 +173,7 @@ void loop(){
   //Here we should check to see if any new messages are here, every few seconds
   //http://jsfiddle.net/8JTLU/4/
   if (millis() - timer > 1000) {
-    Console.println("testing every 1000");
+//    Console.println("testing every 1000");
     timer = millis();
     
 //    toPlay = String(value);
@@ -164,14 +185,14 @@ void loop(){
     
     while(strlen(value) > 0)
     {
-      Console.print("freeMemory()=");
-      Console.println(freeMemory());
-      Console.print("something to playback in ");
-      Console.println(readLocation);
+//      Console.print("freeMemory()=");
+//      Console.println(freeMemory());
+//      Console.print("something to playback in ");
+//      Console.println(readLocation);
       toPlay = String(value);
       play(playbackMultiplier);  
-      Console.print("freeMemory()=");
-      Console.println(freeMemory());
+//      Console.print("freeMemory()=");
+//      Console.println(freeMemory());
       Bridge.put(readLocation, "");
       readIndex++;
       if(readIndex < 10)
@@ -186,36 +207,40 @@ void loop(){
 
 void beepXTimes(int times)
 {
+  int multiplier = times;
+  int pause = 25 * pow(1.6,multiplier);
   for(int i = 0; i < times; i++)
   {
     digitalWrite(ledPin, HIGH);
-    delay(400);
+    delay(pause);
     digitalWrite(ledPin, LOW);
-    delay(400);
+    delay(pause);
   } 
 }
 
 void play(int multiplier)
 {
-  Console.print("memory at start of play method: ");
-  Console.println(freeMemory());
+//  Console.print("memory at start of play method: ");
+//  Console.println(freeMemory());
   //a0b3a1b1a0b1a1b1a0b3a1b3a1b7a0b3a1b1a0b1a1b1a0b3a1b3
-  multiplier = 200 * pow(1.2,multiplier);
+  multiplier = 25 * pow(1.6,multiplier);
+//  Console.println(multiplier);
+  
   action = ' ';
-  Console.println("Going to start playing:");
-  Console.println(toPlay);
+//  Console.println("Going to start playing:");
+//  Console.println(toPlay);
   for(int i = 0; i < toPlay.length(); i+=4)
   {
     action = toPlay.charAt(i+1);
-    Console.print("action: ");
-    Console.print(action);
+//    Console.print("action: ");
+//    Console.print(action);
     playTime = toPlay.charAt(i+3) - '0';
 
     if(playTime < 0)
       playTime = 0; 
-    Console.print("playTime: ");
-    Console.print(playTime);
-    Console.print("playing... ");
+//    Console.print("playTime: ");
+//    Console.print(playTime);
+//    Console.print("playing... ");
   
     if(action == '0')
     {
@@ -227,7 +252,7 @@ void play(int multiplier)
       delay(multiplier*playTime);
     }      
   }
-  Console.println("\nFinished playing\n");
+//  Console.println("\nFinished playing\n");
 }
 
 /*
